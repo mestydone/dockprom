@@ -1,7 +1,8 @@
 version: '3.7'
 
 networks:
-  monitor-net:
+  monitoring_net:
+    name: monitoring_net
     driver: bridge
 
 volumes:
@@ -27,7 +28,7 @@ services:
     expose:
       - 9090
     networks:
-      - monitor-net
+      - monitoring_net
     labels:
       org.label-schema.group: "monitoring"
 
@@ -43,7 +44,7 @@ services:
     expose:
       - 9093
     networks:
-      - monitor-net
+      - monitoring_net
     labels:
       org.label-schema.group: "monitoring"
 
@@ -63,7 +64,7 @@ services:
     expose:
       - 9100
     networks:
-      - monitor-net
+      - monitoring_net
     labels:
       org.label-schema.group: "monitoring"
 
@@ -80,7 +81,7 @@ services:
     expose:
       - 8080
     networks:
-      - monitor-net
+      - monitoring_net
     labels:
       org.label-schema.group: "monitoring"
 
@@ -91,14 +92,16 @@ services:
       - grafana_data:/var/lib/grafana
       - ./grafana/provisioning:/etc/grafana/provisioning
     environment:
-      - GF_SECURITY_ADMIN_USER=${GF_SECURITY_ADMIN_USER}
-      - GF_SECURITY_ADMIN_PASSWORD=${GF_SECURITY_ADMIN_PASSWORD}
-      - GF_USERS_ALLOW_SIGN_UP=${GF_USERS_ALLOW_SIGN_UP}
+      - GF_SECURITY_ADMIN_USER=${ADMIN_USER}
+      - GF_SECURITY_ADMIN_PASSWORD=${ADMIN_PASSWORD}
+      - GF_USERS_ALLOW_SIGN_UP=${ALLOW_SIGN_UP}
+      - GF_SERVER_DOMAIN=${DOMAIN_NAME}
+      - GF_SERVER_ROOT_URL=%(protocol)s://%(domain)s/grafana/
     restart: unless-stopped
     expose:
       - 3000
     networks:
-      - monitor-net
+      - monitoring_net
     labels:
       org.label-schema.group: "monitoring"
 
@@ -109,6 +112,6 @@ services:
     expose:
       - 9091
     networks:
-      - monitor-net
+      - monitoring_net
     labels:
       org.label-schema.group: "monitoring"
