@@ -31,6 +31,10 @@ services:
       - monitoring_net
     labels:
       org.label-schema.group: "monitoring"
+    logging:
+      driver: "syslog"
+      options:
+        tag: "prometheus"
 
   alertmanager:
     image: prom/alertmanager:v0.20.0
@@ -47,6 +51,10 @@ services:
       - monitoring_net
     labels:
       org.label-schema.group: "monitoring"
+    logging:
+      driver: "syslog"
+      options:
+        tag: "alertmanager"
 
   nodeexporter:
     image: prom/node-exporter:v0.18.1
@@ -67,6 +75,10 @@ services:
       - monitoring_net
     labels:
       org.label-schema.group: "monitoring"
+    logging:
+      driver: "syslog"
+      options:
+        tag: "nodeexporter"
 
   cadvisor:
     image: gcr.io/google-containers/cadvisor:v0.34.0
@@ -84,6 +96,10 @@ services:
       - monitoring_net
     labels:
       org.label-schema.group: "monitoring"
+    logging:
+      driver: "syslog"
+      options:
+        tag: "cadvisor"
 
   grafana:
     image: grafana/grafana:6.6.2
@@ -91,6 +107,7 @@ services:
     volumes:
       - grafana_data:/var/lib/grafana
       - ./grafana/provisioning:/etc/grafana/provisioning
+      - ./log/grafana:/var/log/grafana
     environment:
       - GF_SECURITY_ADMIN_USER=${ADMIN_USER}
       - GF_SECURITY_ADMIN_PASSWORD=${ADMIN_PASSWORD}
@@ -104,6 +121,10 @@ services:
       - monitoring_net
     labels:
       org.label-schema.group: "monitoring"
+    logging:
+      driver: "syslog"
+      options:
+        tag: "grafana"
 
   pushgateway:
     image: prom/pushgateway:v1.2.0
@@ -115,3 +136,7 @@ services:
       - monitoring_net
     labels:
       org.label-schema.group: "monitoring"
+    logging:
+      driver: "syslog"
+      options:
+        tag: "pushgateway"
